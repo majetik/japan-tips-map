@@ -906,7 +906,13 @@ document.getElementById("list").addEventListener("click", e => {
 
 render();
 const pts = markers.filter(Boolean).map(m => m.getLatLng());
-if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.1), { maxZoom: 12 });
+const fitAll = () => {
+  map.invalidateSize();  // the container may have resized after Leaflet first measured it
+  if (pts.length) map.fitBounds(L.latLngBounds(pts).pad(0.1), { maxZoom: 12 });
+};
+fitAll();
+window.addEventListener("load", () => setTimeout(fitAll, 50));
+window.addEventListener("resize", () => map.invalidateSize());
 </script>
 </body>
 </html>
